@@ -1,6 +1,6 @@
 # VAC: Variable Allocation Compression
 
-**Compress any transformer to half its size with no capability loss.**
+**Compress a LLM with minimal capability loss.**
 
 VAC is a structured compression toolkit that uses Fisher-informed low-rank factorization with evolutionary strategy search to find the optimal compression for each weight matrix in a transformer model. Unlike uniform quantization, VAC allocates compression budgets *per-matrix* using a multiple-choice knapsack solver, achieving dramatically better quality at the same storage cost.
 
@@ -16,7 +16,7 @@ VAC is a structured compression toolkit that uses Fisher-informed low-rank facto
 The evolved strategy discovered three key insights:
 - **Middle-out compression order** (+21% over front-to-back): compress the easy middle layers first so hard layers get accurate Fisher
 - **Cube-root Fisher scaling** (+18% over sqrt): gentler weighting avoids over-trusting the diagonal Fisher approximation
-- **Attention-heavy allocation**: attention absorbs 4x compression with minimal damage; MLP cannot
+- **Attention-heavy allocation**: attention absorbs 4x compression with minimal damage; MLP can't
 
 ## Installation
 
@@ -77,7 +77,6 @@ The sequential compression is the key breakthrough: each layer is optimized for 
 | Original (bf16) | 14.6 GB | Baseline | 1.0x |
 | GPTQ 4-bit | 4.1 GB | Good | ~1.0x |
 | **VAC 2x (bf16 factors)** | **~8 GB** | **Within 7 PPL** | **~2x faster** |
-| **VAC 2x + Q8 factors** | **~3.5 GB** | **Near-lossless** | **~2x faster** |
 
 VAC is orthogonal to quantization: you can quantize the factorized matrices for additional compression. A VAC model with Q8 factors is *smaller than the original at Q4* while maintaining Q8 fidelity.
 
