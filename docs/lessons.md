@@ -1,7 +1,6 @@
 # Key Lessons Learned
 
-Hard-won insights from compressing OLMo-3-7B-Think. Every lesson here cost
-hours of H100 time and significant confusion.
+Hard-won insights from compressing OLMo-3-7B-Think!
 
 ## 1. Sequential Fisher Is the Breakthrough
 
@@ -21,7 +20,7 @@ Simply changing the compression order -- no other changes -- gives 21% improveme
 - Back-to-front: PPL 122.48 (-17%)
 - Middle-out: PPL 116.84 (-21%)
 
-Middle-out wins because middle layers are ~746x compressible (nearly lossless).
+Middle-out wins because middle layers are ~746x compressible.
 Compressing them first means the hard edge layers get Fisher computed on a
 barely-distorted model.
 
@@ -60,27 +59,17 @@ components amplifies errors.
 SGD plateaued at PPL 156. 8-bit Adam (bitsandbytes) reached PPL 27.86.
 Memory: teacher 14GB + student 14GB + Adam8bit 14GB = fits one H100.
 
-## 8. The Model Is Undertrained, Not Broken
-
-After compression + KD, the remaining PPL gap is a training budget problem.
-Continued pretraining on the original data helps. The answer is often boring:
-more tokens.
-
-## 9. Replay Post-Training, Not Just Pretraining
+## 8. Replay Post-Training, Not Just Pretraining
 
 For models with SFT/DPO/RLVR post-training, you must replay those stages
 to recover the actual capabilities (instruction following, reasoning quality,
 safety, format control).
 
-## 10. Never Trust Profiling Predictions
+## 9. Never Trust Profiling Predictions
 
 Per-matrix profiling said "additive dloss = 1.6." Actual pre-KD PPL: 9,739.
 Profiling measures each matrix in isolation; compound errors through 32 layers
 of residual stream are multiplicative, not additive.
-
-**Rule:** The evolutionary search evaluates the actual compressed model PPL.
-No prediction, no extrapolation, no per-matrix isolation. Spend 10 minutes
-measuring what actually happens before committing hours of training.
 
 ## The Full Pipeline (What Works)
 
