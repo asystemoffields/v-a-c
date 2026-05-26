@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vac-compress"
+version = "0.1.0"
+description = "Variable Allocation Compression: Fisher-informed structured compression for transformers"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+authors = [
+    {name = "asystemoffields", email = "invertedinkuniverse@proton.me"},
+]
+keywords = ["compression", "transformers", "low-rank", "fisher", "svd", "llm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.0",
+    "transformers>=4.35",
+    "datasets>=2.14",
+    "numpy>=1.24",
+    "safetensors>=0.3",
+]
+
+[project.optional-dependencies]
+kd = ["bitsandbytes>=0.41"]
+eval = ["lm-eval>=0.4"]
+all = ["bitsandbytes>=0.41", "lm-eval>=0.4"]
+
+[project.urls]
+Homepage = "https://github.com/asystemoffields/v-a-c"
+Repository = "https://github.com/asystemoffields/v-a-c"
+Issues = "https://github.com/asystemoffields/v-a-c/issues"
+
+[project.scripts]
+vac-compress = "scripts.compress_model:main"
+vac-eval = "scripts.eval_model:main"
+
+[tool.setuptools.packages.find]
+include = ["vac*"]
